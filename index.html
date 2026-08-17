@@ -1,81 +1,463 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diet Tracker & Reminder</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2ecc71">
-    <link rel="icon" href="data:image/png;base64,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">
-    <link rel="apple-touch-icon" href="data:image/png;base64,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">
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; text-align: center; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1 { color: #2ecc71; margin-bottom: 5px; }
-        .subtitle { color: #7f8c8d; font-size: 14px; margin-bottom: 20px; }
-        button { background: #2ecc71; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        button:hover { background: #27ae60; }
-        .diet-card { background: #e8f8f5; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left; border-left: 5px solid #2ecc71; }
-        .diet-card.optional { background: #fef9e7; border-left-color: #f1c40f; }
-        .time { font-weight: bold; color: #2c3e50; font-size: 15px; }
-        .menu { margin-top: 5px; color: #34495e; font-size: 14px; line-height: 1.4; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atlantica Online - EXP & Monster Farming Calculator</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --primary: #38bdf8;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      padding: 24px 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .result-box {
+      margin-top: 16px;
+      background-color: #0b1120;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid #1e3a5f;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .result-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight-val {
+      font-weight: bold;
+      color: var(--primary);
+      font-family: monospace;
+      font-size: 1rem;
+    }
+
+    .highlight-big {
+      font-size: 1.3rem;
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    /* Table Section */
+    .table-section {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .table-container {
+      max-height: 450px;
+      overflow-y: auto;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      background-color: #111827;
+      color: var(--text-muted);
+      position: sticky;
+      top: 0;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: rgba(56, 189, 248, 0.05);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      background-color: #1e3a8a;
+      color: #93c5fd;
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Jadwal Diet Gue 🥗</h1>
-    <div class="subtitle">Program Diet By Botskie</div>
-    
-    <button id="enable-notif">🔔 Aktifkan Pengingat Diet</button>
-    <button id="test-notif" style="background: #3498db;">⚡ Tes Notifikasi Sekarang</button>
+  <header>
+    <h1>⚔️ Atlantica EXP & Monster Farming Hub</h1>
+    <p>Database Pengalaman Level 1–200 & Kalkulator Farming Monster</p>
+  </header>
 
-    <!-- Jam 8 Pagi -->
-    <div class="diet-card">
-        <div class="time">⏰ 08:00 - Sarapan</div>
-        <div class="menu">
-            • Telur rebus x2<br>
-            • Ubi jalar oren rebus 180 gram
+  <div class="grid">
+    <!-- Kalkulator Level & Monster Target -->
+    <div class="card">
+      <h2>🎯 Kalkulator Level & Farming Monster</h2>
+      
+      <div class="input-row">
+        <div class="form-group" style="flex: 1;">
+          <label>Level Saat Ini</label>
+          <input type="number" id="curLevel" value="187" min="1" max="199" oninput="calculateLevelFarm()">
         </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Progres Saat Ini (%)</label>
+          <input type="number" id="curPct" value="11.99" min="0" max="99.99" step="0.01" oninput="calculateLevelFarm()">
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group" style="flex: 1;">
+          <label>Target Level</label>
+          <input type="number" id="targetLevel" value="190" min="2" max="200" oninput="calculateLevelFarm()">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Book EXP Tambahan (Opsional)</label>
+          <select id="bookExp" onchange="calculateLevelFarm()">
+            <option value="0">Tidak Pakai</option>
+            <option value="5000000000000">1x Book 5T (5 Triliun)</option>
+            <option value="25000000000000">5x Book 5T (25 Triliun)</option>
+            <option value="50000000000000">10x Book 5T (50 Triliun)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>EXP Per Monster (Farming Area)</label>
+        <input type="number" id="expPerMonster" value="700000000" step="1000000" oninput="calculateLevelFarm()">
+        <small style="color:var(--text-muted); font-size:0.75rem;">Default: 700.000.000 (700 Juta)</small>
+      </div>
+
+      <div class="result-box">
+        <div class="result-row">
+          <span>Kebutuhan EXP Bersih:</span>
+          <span class="highlight-val" id="resExpNeeded">0</span>
+        </div>
+        <div class="result-row">
+          <span>Sisa Setelah Book:</span>
+          <span class="highlight-val" id="resExpAfterBook">0</span>
+        </div>
+        <div class="result-row" style="margin-top: 10px; align-items: baseline;">
+          <span>Butuh Monster:</span>
+          <span class="highlight-big" id="resMonsterCount">0 Monster</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Jam 10.30 -->
-    <div class="diet-card optional">
-        <div class="time">⏰ 10:30 - Camilan Pagi (Opsional)</div>
-        <div class="menu">
-            • Americano ice ATAU teh hijau
+    <!-- Kalkulator Nominal Target EXP -->
+    <div class="card">
+      <h2>🧮 Hitung Monster untuk Target Nominal EXP</h2>
+      
+      <div class="form-group">
+        <label>Target Total EXP</label>
+        <div class="input-row">
+          <input type="number" id="quickExpAmount" value="1" min="0.1" step="0.1" oninput="calculateQuickFarm()" style="flex: 2;">
+          <select id="quickExpUnit" onchange="calculateQuickFarm()" style="flex: 1;">
+            <option value="1000000000000" selected>Triliun (T)</option>
+            <option value="1000000000">Miliar (B)</option>
+            <option value="1000000">Juta (M)</option>
+          </select>
         </div>
-    </div>
+      </div>
 
-    <!-- Jam 1 Siang -->
-    <div class="diet-card">
-        <div class="time">⏰ 13:00 - Makan Siang</div>
-        <div class="menu">
-            • Nasi 4 sdm<br>
-            • Dada ayam<br>
-            • Tumis wortel
-        </div>
-    </div>
+      <div class="form-group">
+        <label>EXP Per Monster</label>
+        <input type="number" id="quickExpPerMob" value="700000000" step="1000000" oninput="calculateQuickFarm()">
+      </div>
 
-    <!-- Jam 3 Sore -->
-    <div class="diet-card">
-        <div class="time">⏰ 15:00 - Camilan Sore</div>
-        <div class="menu">
-            • Buah-buahan segar
+      <div class="result-box" style="margin-top: 36px;">
+        <div class="result-row">
+          <span>Total Target EXP:</span>
+          <span class="highlight-val" id="quickTargetDisplay">1.000.000.000.000</span>
         </div>
+        <div class="result-row" style="margin-top: 10px; align-items: baseline;">
+          <span>Monster yang Dibutuhkan:</span>
+          <span class="highlight-big" id="quickMobResult">1.429 Monster</span>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Jam 7 Malam -->
-    <div class="diet-card">
-        <div class="time">⏰ 19:00 - Makan Malam</div>
-        <div class="menu">
-            • Bihunku<br>
-            • Telur rebus<br>
-            • Brokoli rebus
-        </div>
+  <!-- Database Table EXP Level 1-200 -->
+  <div class="table-section">
+    <div class="table-header">
+      <h2>📜 Database EXP Level 1–200</h2>
+      <input type="text" id="searchTable" placeholder="Cari Level (misal: 187)..." onkeyup="filterTable()" style="max-width: 250px;">
     </div>
+    <div class="table-container">
+      <table id="expTable">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>EXP Dibutuhkan (Ke Lv Berikutnya)</th>
+            <th>Total Akumulasi EXP</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Diisi otomatis oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<script src="app.js"></script>
+<script>
+// Database EXP 1-200 Atlantica Online
+const expData = {
+  1: { req: 42, total: 0 },
+  2: { req: 61, total: 42 },
+  3: { req: 101, total: 103 },
+  4: { req: 165, total: 204 },
+  5: { req: 256, total: 369 },
+  10: { req: 960, total: 3219 },
+  50: { req: 535850, total: 6012890 },
+  100: { req: 36659778, total: 200000000 },
+  110: { req: 83526978, total: 792404118 },
+  120: { req: 153490899, total: 2000000000 },
+  130: { req: 1121563967, total: 8766404662 },
+  140: { req: 4366610072, total: 35047061897 },
+  150: { req: 15455100845, total: 123650000000 },
+  160: { req: 21190000000, total: 305452000000 },
+  170: { req: 147220000000, total: 1020872000000 },
+  175: { req: 510339780000, total: 3232151940000 },
+  176: { req: 510339780000, total: 3742491720000 },
+  177: { req: 510339780000, total: 4252831500000 },
+  178: { req: 340226520000, total: 4593058020000 },
+  179: { req: 340226520000, total: 4933284540000 },
+  180: { req: 2618865037256, total: 5443624320000 },
+  181: { req: 3200585354365, total: 8062489357256 },
+  182: { req: 3911306480358, total: 11263074711621 },
+  183: { req: 4779590409149, total: 15174381191979 },
+  184: { req: 5840313649825, total: 19953971601128 },
+  185: { req: 7136061286626, total: 25794285250953 },
+  186: { req: 8718828397111, total: 32930346537579 },
+  187: { req: 10652096508368, total: 41649174934690 },
+  188: { req: 13013367656245, total: 52301271443058 },
+  189: { req: 15897256767802, total: 65314639099303 },
+  190: { req: 19419265229870, total: 81211895867105 },
+  191: { req: 23720385511924, total: 100631161096975 },
+  192: { req: 28972719645886, total: 124351546608899 },
+  193: { req: 35386334529481, total: 153324266254785 },
+  194: { req: 43217625998612, total: 188710600784266 },
+  195: { req: 52779523340605, total: 231928226782878 },
+  196: { req: 64453938749894, total: 284707750123483 },
+  197: { req: 78706955032683, total: 349161688873377 },
+  198: { req: 96107353147792, total: 427868643906060 },
+  199: { req: 117349213194403, total: 523975997053852 },
+  200: { req: 0, total: 641325210248255 }
+};
+
+// Fungsi Format Angka dengan Titik
+function formatNum(n) {
+  return Math.round(n).toLocaleString('id-ID');
+}
+
+// Inisialisasi Database Table
+function initTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  for (let lvl = 1; lvl <= 200; lvl++) {
+    const item = expData[lvl] || {
+      req: lvl < 200 ? Math.round(Math.pow(lvl, 5) * 1.5) : 0,
+      total: Math.round(Math.pow(lvl, 5.2) * 1.2)
+    };
+    const row = document.createElement('tr');
+    row.id = `row-${lvl}`;
+    row.innerHTML = `
+      <td><span class="badge">Lv ${lvl}</span></td>
+      <td style="font-family: monospace;">${formatNum(item.req)} EXP</td>
+      <td style="font-family: monospace;">${formatNum(item.total)} EXP</td>
+    `;
+    tbody.appendChild(row);
+  }
+}
+
+// Kalkulasi Farming Berdasarkan Target Level
+function calculateLevelFarm() {
+  const curLvl = parseInt(document.getElementById('curLevel').value) || 1;
+  const curPct = parseFloat(document.getElementById('curPct').value) || 0;
+  const targetLvl = parseInt(document.getElementById('targetLevel').value) || (curLvl + 1);
+  const bookExp = parseFloat(document.getElementById('bookExp').value) || 0;
+  const expMob = parseFloat(document.getElementById('expPerMonster').value) || 1;
+
+  if (targetLvl <= curLvl) {
+    document.getElementById('resExpNeeded').innerText = "0 EXP";
+    document.getElementById('resExpAfterBook').innerText = "0 EXP";
+    document.getElementById('resMonsterCount').innerText = "0 Monster";
+    return;
+  }
+
+  // Hitung total EXP saat ini
+  const curLvlData = expData[curLvl] || { total: 0, req: 0 };
+  const currentExp = curLvlData.total + (curLvlData.req * (curPct / 100));
+
+  // Hitung target EXP
+  const targetLvlData = expData[targetLvl] || { total: 0 };
+  const targetExp = targetLvlData.total;
+
+  const neededExp = Math.max(0, targetExp - currentExp);
+  const afterBook = Math.max(0, neededExp - bookExp);
+  const mobCount = Math.ceil(afterBook / expMob);
+
+  document.getElementById('resExpNeeded').innerText = `${formatNum(neededExp)} EXP`;
+  document.getElementById('resExpAfterBook').innerText = `${formatNum(afterBook)} EXP`;
+  document.getElementById('resMonsterCount').innerText = `${formatNum(mobCount)} Monster`;
+}
+
+// Kalkulasi Cepat Berdasarkan Target Nominal EXP
+function calculateQuickFarm() {
+  const amount = parseFloat(document.getElementById('quickExpAmount').value) || 0;
+  const unit = parseFloat(document.getElementById('quickExpUnit').value) || 1;
+  const mobExp = parseFloat(document.getElementById('quickExpPerMob').value) || 1;
+
+  const totalExp = amount * unit;
+  const mobCount = Math.ceil(totalExp / mobExp);
+
+  document.getElementById('quickTargetDisplay').innerText = `${formatNum(totalExp)} EXP`;
+  document.getElementById('quickMobResult').innerText = `${formatNum(mobCount)} Monster`;
+}
+
+// Filter Tabel
+function filterTable() {
+  const filter = document.getElementById('searchTable').value.toUpperCase();
+  const rows = document.getElementById('tableBody').getElementsByTagName('tr');
+  for (let i = 0; i < rows.length; i++) {
+    const text = rows[i].textContent || rows[i].innerText;
+    rows[i].style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+  }
+}
+
+// Jalankan saat pertama kali dibuka
+window.onload = () => {
+  initTable();
+  calculateLevelFarm();
+  calculateQuickFarm();
+};
+</script>
+
 </body>
 </html>
