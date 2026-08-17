@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atlantica Online - EXP & Monster Farming Hub</title>
+  <title>Atlantica Online - EXP & Monster Farming Calculator</title>
   <style>
     :root {
       --bg-dark: #0f172a;
@@ -147,6 +147,7 @@
       font-weight: bold;
     }
 
+    /* Table Section */
     .table-section {
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -229,25 +230,18 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Target Level</label>
-        <input type="number" id="targetLevel" value="190" min="2" max="200" oninput="calculateLevelFarm()">
-      </div>
-
-      <!-- Pilihan Book EXP & Jumlah Buku -->
       <div class="input-row">
         <div class="form-group" style="flex: 1;">
-          <label>Jumlah Buku EXP</label>
-          <input type="number" id="bookQty" value="5" min="0" step="1" oninput="calculateLevelFarm()">
+          <label>Target Level</label>
+          <input type="number" id="targetLevel" value="190" min="2" max="200" oninput="calculateLevelFarm()">
         </div>
-        <div class="form-group" style="flex: 1.5;">
-          <label>Tipe Book EXP</label>
-          <select id="bookType" onchange="calculateLevelFarm()">
-            <option value="500000000">Book 500 JT Exp</option>
-            <option value="1500000000">Book 1,5 M Exp (1,5 B)</option>
-            <option value="10000000000">Book 10 M Exp (10 B)</option>
-            <option value="1000000000000">Book 1 T Exp</option>
-            <option value="5000000000000" selected>Book 5 T Exp</option>
+        <div class="form-group" style="flex: 1;">
+          <label>Book EXP Tambahan (Opsional)</label>
+          <select id="bookExp" onchange="calculateLevelFarm()">
+            <option value="0">Tidak Pakai</option>
+            <option value="5000000000000">1x Book 5T (5 Triliun)</option>
+            <option value="25000000000000">5x Book 5T (25 Triliun)</option>
+            <option value="50000000000000">10x Book 5T (50 Triliun)</option>
           </select>
         </div>
       </div>
@@ -264,11 +258,7 @@
           <span class="highlight-val" id="resExpNeeded">0</span>
         </div>
         <div class="result-row">
-          <span>Total EXP dari Book:</span>
-          <span class="highlight-val" id="resBookTotal">0</span>
-        </div>
-        <div class="result-row">
-          <span>Sisa EXP Setelah Book:</span>
+          <span>Sisa Setelah Book:</span>
           <span class="highlight-val" id="resExpAfterBook">0</span>
         </div>
         <div class="result-row" style="margin-top: 10px; align-items: baseline;">
@@ -328,6 +318,7 @@
           </tr>
         </thead>
         <tbody id="tableBody">
+          <!-- Diisi otomatis oleh JavaScript -->
         </tbody>
       </table>
     </div>
@@ -380,10 +371,12 @@ const expData = {
   200: { req: 0, total: 641325210248255 }
 };
 
+// Fungsi Format Angka dengan Titik
 function formatNum(n) {
   return Math.round(n).toLocaleString('id-ID');
 }
 
+// Inisialisasi Database Table
 function initTable() {
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
@@ -403,41 +396,39 @@ function initTable() {
   }
 }
 
+// Kalkulasi Farming Berdasarkan Target Level
 function calculateLevelFarm() {
   const curLvl = parseInt(document.getElementById('curLevel').value) || 1;
   const curPct = parseFloat(document.getElementById('curPct').value) || 0;
   const targetLvl = parseInt(document.getElementById('targetLevel').value) || (curLvl + 1);
-  
-  const bookQty = Math.max(0, parseInt(document.getElementById('bookQty').value) || 0);
-  const bookVal = parseFloat(document.getElementById('bookType').value) || 0;
-  const totalBookExp = bookQty * bookVal;
-  
+  const bookExp = parseFloat(document.getElementById('bookExp').value) || 0;
   const expMob = parseFloat(document.getElementById('expPerMonster').value) || 1;
 
   if (targetLvl <= curLvl) {
     document.getElementById('resExpNeeded').innerText = "0 EXP";
-    document.getElementById('resBookTotal').innerText = `${formatNum(totalBookExp)} EXP`;
     document.getElementById('resExpAfterBook').innerText = "0 EXP";
     document.getElementById('resMonsterCount').innerText = "0 Monster";
     return;
   }
 
+  // Hitung total EXP saat ini
   const curLvlData = expData[curLvl] || { total: 0, req: 0 };
   const currentExp = curLvlData.total + (curLvlData.req * (curPct / 100));
 
+  // Hitung target EXP
   const targetLvlData = expData[targetLvl] || { total: 0 };
   const targetExp = targetLvlData.total;
 
   const neededExp = Math.max(0, targetExp - currentExp);
-  const afterBook = Math.max(0, neededExp - totalBookExp);
+  const afterBook = Math.max(0, neededExp - bookExp);
   const mobCount = Math.ceil(afterBook / expMob);
 
   document.getElementById('resExpNeeded').innerText = `${formatNum(neededExp)} EXP`;
-  document.getElementById('resBookTotal').innerText = `${formatNum(totalBookExp)} EXP`;
   document.getElementById('resExpAfterBook').innerText = `${formatNum(afterBook)} EXP`;
   document.getElementById('resMonsterCount').innerText = `${formatNum(mobCount)} Monster`;
 }
 
+// Kalkulasi Cepat Berdasarkan Target Nominal EXP
 function calculateQuickFarm() {
   const amount = parseFloat(document.getElementById('quickExpAmount').value) || 0;
   const unit = parseFloat(document.getElementById('quickExpUnit').value) || 1;
@@ -450,6 +441,7 @@ function calculateQuickFarm() {
   document.getElementById('quickMobResult').innerText = `${formatNum(mobCount)} Monster`;
 }
 
+// Filter Tabel
 function filterTable() {
   const filter = document.getElementById('searchTable').value.toUpperCase();
   const rows = document.getElementById('tableBody').getElementsByTagName('tr');
@@ -459,6 +451,7 @@ function filterTable() {
   }
 }
 
+// Jalankan saat pertama kali dibuka
 window.onload = () => {
   initTable();
   calculateLevelFarm();
