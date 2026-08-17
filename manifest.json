@@ -1,7 +1,7 @@
 {
-  "name": "Jadwal Diet Gue",
-  "short_name": "Jadwal Diet",
-  "description": "Pengingat jadwal makan & diet harian",
+  "name": "Atlantica Rebirth DB",
+  "short_name": "AOR",
+  "description": "Database Information Game",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
