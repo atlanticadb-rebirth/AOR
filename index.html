@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atlantica Online - Ultimate Portal & DB</title>
+  <title>Atlantica Online - Ultimate Portal & Admin Dashboard</title>
   <style>
     :root {
       --bg-dark: #090d16;
@@ -13,6 +13,7 @@
       --primary: #38bdf8;
       --accent: #f59e0b;
       --success: #10b981;
+      --danger: #ef4444;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -101,6 +102,17 @@
       color: #0b1120;
       font-weight: 700;
       box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+
+    .nav-btn.admin-nav {
+      margin-top: 16px;
+      border: 1px dashed var(--accent);
+      color: var(--accent);
+    }
+
+    .nav-btn.admin-nav:hover, .nav-btn.admin-nav.active {
+      background-color: var(--accent);
+      color: #000;
     }
 
     .nav-btn .icon {
@@ -208,7 +220,7 @@
       margin-bottom: 4px;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 10px 12px;
       background-color: #0b1120;
@@ -220,13 +232,30 @@
       transition: border-color 0.2s;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: var(--primary);
     }
 
     .input-row {
       display: flex;
       gap: 10px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: #0b1120;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
     }
 
     .result-box {
@@ -323,18 +352,48 @@
       margin-bottom: 16px;
     }
 
-    .event-rewards {
+    .event-reward-section {
       background-color: #0b1120;
       border-radius: 8px;
-      padding: 10px 12px;
+      padding: 12px;
       border: 1px solid var(--card-border);
       font-size: 0.85rem;
     }
 
-    .event-rewards strong {
+    .event-reward-section strong {
       color: var(--primary);
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+    }
+
+    .reward-img-container {
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .reward-img-container img {
+      max-width: 100%;
+      max-height: 140px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      object-fit: cover;
+    }
+
+    .btn-delete-event {
+      margin-top: 12px;
+      background-color: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .btn-delete-event:hover {
+      background-color: var(--danger);
+      color: #fff;
     }
 
     /* Table Section */
@@ -404,7 +463,7 @@
       <span class="brand-icon">⚔️</span>
       <div class="brand-text">
         <h1>Atlantica Hub</h1>
-        <span>Rebirth Database</span>
+        <span>Portal & Manager</span>
       </div>
     </div>
 
@@ -417,10 +476,14 @@
         <span class="icon">🔥</span>
         <span>Event Now & Buffs</span>
       </button>
+      <button class="nav-btn admin-nav" onclick="switchTab('tab-admin', this)">
+        <span class="icon">⚙️</span>
+        <span>Admin Event Manager</span>
+      </button>
     </nav>
 
     <div class="sidebar-footer">
-      <span>Status: <b>Online</b></span><br>
+      <span>Status: <b>Live Host</b></span><br>
       <span style="font-size:0.75rem; color:var(--primary);">Level Cap: 200</span>
     </div>
   </aside>
@@ -436,7 +499,6 @@
       </div>
 
       <div class="grid">
-        <!-- Kalkulator Level & Monster Target -->
         <div class="card">
           <h3>🎯 Kalkulator Level & Farming Monster</h3>
           
@@ -456,7 +518,6 @@
             <input type="number" id="targetLevel" value="190" min="2" max="200" oninput="calculateLevelFarm()">
           </div>
 
-          <!-- Input Jumlah Buku & Pilihan Tipe Buku -->
           <div class="input-row">
             <div class="form-group" style="flex: 1;">
               <label>Jumlah Buku EXP</label>
@@ -500,7 +561,6 @@
           </div>
         </div>
 
-        <!-- Kalkulator Nominal Target EXP -->
         <div class="card">
           <h3>🧮 Hitung Monster untuk Target Nominal EXP</h3>
           
@@ -534,7 +594,6 @@
         </div>
       </div>
 
-      <!-- Database Table EXP Level 1-200 -->
       <div class="table-section">
         <div class="table-header">
           <h3>📜 Database EXP Level 1–200</h3>
@@ -549,8 +608,7 @@
                 <th>Total Akumulasi EXP</th>
               </tr>
             </thead>
-            <tbody id="tableBody">
-            </tbody>
+            <tbody id="tableBody"></tbody>
           </table>
         </div>
       </div>
@@ -560,72 +618,80 @@
     <section id="tab-events" class="tab-content">
       <div class="section-header">
         <h2>🔥 Active & Upcoming Events</h2>
-        <p>Jadwal event aktif, bonus server buff, festival harian, dan hadiah event Atlantica Online.</p>
+        <p>Jadwal event aktif, bonus server buff, festival harian, dan reward item Atlantica Online.</p>
       </div>
 
-      <div class="event-grid">
-        <!-- Event Card 1 -->
-        <div class="event-card featured">
-          <span class="event-tag tag-live">Active Now</span>
-          <div>
-            <h4 class="event-title">🎂 Cake World & Festival EXP Event</h4>
-            <div class="event-date">⏰ Harian: Setiap Jam Ganjil (Server Time)</div>
-            <p class="event-desc">Masuki Cake World Dungeon melalui Portal Gate di Roma / Antillia. Kumpulkan Piece of Cake untuk ditukarkan dengan Book EXP & Box Aksesoris Langka.</p>
-          </div>
-          <div class="event-rewards">
-            <strong>🎁 Highlight Hadiah & Buff:</strong>
-            <span>• Book EXP 1T / 5T Box<br>• Festival Title (+15% Attack & EXP)<br>• Cake World Box Exchange</span>
-          </div>
-        </div>
+      <div class="event-grid" id="eventGridContainer">
+        <!-- Render dinamis dari LocalStorage / Database JS -->
+      </div>
+    </section>
 
-        <!-- Event Card 2 -->
-        <div class="event-card">
-          <span class="event-tag tag-hot">Server Buff</span>
-          <div>
-            <h4 class="event-title">⚡ Weekend EXP & Diary Bonus (300%)</h4>
-            <div class="event-date">⏰ Setiap Sabtu & Minggu (00:00 - 23:59)</div>
-            <p class="event-desc">Dapatkan bonus 300% EXP monster kill dan 200% Monster Diary EXP sepanjang akhir pekan. Berlaku untuk seluruh map hunting reguler.</p>
-          </div>
-          <div class="event-rewards">
-            <strong>🎁 Buff Efek:</strong>
-            <span>• +300% Hunting Monster EXP<br>• +200% Monster Diary completion EXP<br>• +100% Crafting EXP</span>
-          </div>
-        </div>
+    <!-- ================= TAB 3: ADMIN EVENT UPLOADER ================= -->
+    <section id="tab-admin" class="tab-content">
+      <div class="section-header">
+        <h2>⚙️ Admin Event & Reward Uploader</h2>
+        <p>Kelola dan upload event baru beserta detail reward item dan gambarnya secara instan.</p>
+      </div>
 
-        <!-- Event Card 3 -->
-        <div class="event-card">
-          <span class="event-tag tag-live">Active Now</span>
-          <div>
-            <h4 class="event-title">🛡️ Art of Defense (AoD) Daily Raid</h4>
-            <div class="event-date">⏰ Reset: Harian 06:00 Server Time</div>
-            <p class="event-desc">Pertahankan gerbang dari serangan gelombang monster bersama party/guild. Sumber perolehan buku pengalaman level tinggi harian.</p>
+      <div class="card" style="max-width: 700px; margin: 0 auto;">
+        <h3>📝 Form Tambah Event Baru</h3>
+        <form id="eventForm" onsubmit="handleEventSubmit(event)">
+          <div class="form-group">
+            <label>Nama Event</label>
+            <input type="text" id="admEventTitle" placeholder="Contoh: Dragon Hunting Festival" required>
           </div>
-          <div class="event-rewards">
-            <strong>🎁 Hadiah Penyelesaian:</strong>
-            <span>• High Grade EXP Books<br>• AoD Victory Badges<br>• Mercenary Skill Books</span>
-          </div>
-        </div>
 
-        <!-- Event Card 4 -->
-        <div class="event-card">
-          <span class="event-tag tag-upcoming">Upcoming</span>
-          <div>
-            <h4 class="event-title">🏆 Guild Championship League</h4>
-            <div class="event-date">⏰ Setiap Hari Rabu & Jumat (20:00 WIB)</div>
-            <p class="event-desc">Pertempuran antar guild untuk memperebutkan kontrol kota dan buff wilayah tambahan.</p>
+          <div class="input-row">
+            <div class="form-group" style="flex: 1;">
+              <label>Tipe / Tag Status</label>
+              <select id="admEventTag">
+                <option value="tag-live">Active Now (Hijau)</option>
+                <option value="tag-hot">Hot Server Buff (Kuning)</option>
+                <option value="tag-upcoming">Upcoming Event (Biru)</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Jadwal / Waktu Event</label>
+              <input type="text" id="admEventDate" placeholder="Contoh: Setiap Sabtu 20:00 WIB" required>
+            </div>
           </div>
-          <div class="event-rewards">
-            <strong>🎁 Hadiah Pemenang:</strong>
-            <span>• Kota Guild & Pajak Daerah<br>• Guild Feast Buff (+50% All Stats)</span>
+
+          <div class="form-group">
+            <label>Deskripsi Event</label>
+            <textarea id="admEventDesc" rows="3" placeholder="Jelaskan cara berpartisipasi dan lokasi event..." required></textarea>
           </div>
-        </div>
+
+          <div class="form-group">
+            <label>Daftar Reward Item (Gunakan baris baru untuk setiap item)</label>
+            <textarea id="admEventRewards" rows="3" placeholder="• 10x Book EXP 5T&#10;• 1x Dragon Weapon Box&#10;• Title: Dragon Slayer (+20% ATK)" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Upload Gambar Reward Item (PNG / JPG)</label>
+            <input type="file" id="admEventImg" accept="image/*" onchange="previewImage(this)">
+            <div id="imgPreviewBox" class="reward-img-container" style="display:none; margin-top: 10px;">
+              <img id="imgPreview" src="" alt="Preview Reward">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">🚀 Publikasikan Event Baru</button>
+        </form>
       </div>
     </section>
 
   </main>
 
 <script>
+// Tab Switching
 function switchTab(tabId, btn) {
+  if (tabId === 'tab-admin') {
+    const pass = prompt("Masukkan Password Admin:", "");
+    if (pass !== "admin123") {
+      alert("Password Admin Salah!");
+      return;
+    }
+  }
+
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   
@@ -633,6 +699,133 @@ function switchTab(tabId, btn) {
   btn.classList.add('active');
 }
 
+// Default Events Data
+const defaultEvents = [
+  {
+    id: 1,
+    title: "🎂 Cake World & Festival EXP",
+    tag: "tag-live",
+    tagLabel: "Active Now",
+    date: "⏰ Harian: Setiap Jam Ganjil",
+    desc: "Masuki Cake World Dungeon melalui Portal Gate Roma/Antillia. Kumpulkan Piece of Cake untuk ditukarkan dengan Book EXP & Box Aksesoris.",
+    rewards: "• Book EXP 1T / 5T Box<br>• Festival Title (+15% Attack & EXP)<br>• Cake World Box Exchange",
+    img: ""
+  },
+  {
+    id: 2,
+    title: "⚡ Weekend EXP Bonus (300%)",
+    tag: "tag-hot",
+    tagLabel: "Server Buff",
+    date: "⏰ Setiap Sabtu & Minggu (00:00 - 23:59)",
+    desc: "Dapatkan bonus 300% EXP monster kill dan 200% Monster Diary EXP sepanjang akhir pekan di semua hunting ground.",
+    rewards: "• +300% Hunting Monster EXP<br>• +200% Diary EXP<br>• +100% Crafting EXP",
+    img: ""
+  }
+];
+
+// Load & Render Events
+function loadEvents() {
+  const saved = localStorage.getItem('atlantica_events');
+  const events = saved ? JSON.parse(saved) : defaultEvents;
+  const container = document.getElementById('eventGridContainer');
+  container.innerHTML = '';
+
+  events.forEach(evt => {
+    const card = document.createElement('div');
+    card.className = `event-card ${evt.tag === 'tag-hot' ? 'featured' : ''}`;
+    
+    let tagText = "Active Now";
+    if (evt.tag === 'tag-hot') tagText = "Hot Buff";
+    if (evt.tag === 'tag-upcoming') tagText = "Upcoming";
+
+    card.innerHTML = `
+      <span class="event-tag ${evt.tag}">${tagText}</span>
+      <div>
+        <h4 class="event-title">${evt.title}</h4>
+        <div class="event-date">${evt.date}</div>
+        <p class="event-desc">${evt.desc}</p>
+      </div>
+      <div class="event-reward-section">
+        <strong>🎁 Reward Item:</strong>
+        <div>${evt.rewards}</div>
+        ${evt.img ? `<div class="reward-img-container"><img src="${evt.img}" alt="Reward Image"></div>` : ''}
+      </div>
+      <button class="btn-delete-event" onclick="deleteEvent(${evt.id})">🗑️ Hapus Event (Admin)</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Convert Uploaded Image to Base64 for Preview & Storage
+let uploadedBase64Img = "";
+function previewImage(input) {
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedBase64Img = e.target.result;
+      document.getElementById('imgPreview').src = uploadedBase64Img;
+      document.getElementById('imgPreviewBox').style.display = 'block';
+    }
+    reader.readAsDataURL(file);
+  }
+}
+
+// Handle Form Submit (Admin Upload)
+function handleEventSubmit(e) {
+  e.preventDefault();
+  
+  const title = document.getElementById('admEventTitle').value;
+  const tag = document.getElementById('admEventTag').value;
+  const date = document.getElementById('admEventDate').value;
+  const desc = document.getElementById('admEventDesc').value;
+  const rewardsRaw = document.getElementById('admEventRewards').value;
+  const rewards = rewardsRaw.replace(/\n/g, '<br>');
+
+  const newEvent = {
+    id: Date.now(),
+    title: title,
+    tag: tag,
+    date: date,
+    desc: desc,
+    rewards: rewards,
+    img: uploadedBase64Img
+  };
+
+  const saved = localStorage.getItem('atlantica_events');
+  const events = saved ? JSON.parse(saved) : [...defaultEvents];
+  events.unshift(newEvent);
+
+  localStorage.setItem('atlantica_events', JSON.stringify(events));
+  alert('Event berhasil ditambahkan!');
+
+  // Reset form
+  document.getElementById('eventForm').reset();
+  document.getElementById('imgPreviewBox').style.display = 'none';
+  uploadedBase64Img = "";
+
+  loadEvents();
+  // Switch ke tab Events
+  const eventTabBtn = document.querySelectorAll('.nav-btn')[1];
+  switchTab('tab-events', eventTabBtn);
+}
+
+// Delete Event
+function deleteEvent(id) {
+  const pass = prompt("Masukkan Password Admin untuk menghapus event:", "");
+  if (pass !== "admin123") {
+    alert("Password Admin Salah!");
+    return;
+  }
+
+  const saved = localStorage.getItem('atlantica_events');
+  let events = saved ? JSON.parse(saved) : [...defaultEvents];
+  events = events.filter(e => e.id !== id);
+  localStorage.setItem('atlantica_events', JSON.stringify(events));
+  loadEvents();
+}
+
+// Database EXP 1-200
 const expData = {
   1: { req: 42, total: 0 },
   2: { req: 61, total: 42 },
@@ -758,6 +951,7 @@ function filterTable() {
 
 window.onload = () => {
   initTable();
+  loadEvents();
   calculateLevelFarm();
   calculateQuickFarm();
 };
